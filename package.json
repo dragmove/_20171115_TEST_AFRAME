@@ -1,0 +1,45 @@
+{
+  "name": "_20171115_TEST_AFRAME",
+  "version": "0.0.1",
+  "description": "toy project",
+  "keywords": [],
+  "homepage": "https://github.com/dragmove/_20171115_TEST_AFRAME",
+  "bugs": {
+    "url": "https://github.com/dragmove/_20171115_TEST_AFRAME/issues",
+    "email": "dragmove@gmail.com"
+  },
+  "main": "main.js",
+  "scripts": {},
+  "author": {
+    "name": "Hyun-Seok.Kim",
+    "email": "dragmove@gmail.com",
+    "url": "http://dragmove.com"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://opensource.org/licenses/mit-license.php"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dragmove/_20171115_TEST_AFRAME"
+  },
+  "devDependencies": {
+    "aframe": "^0.7.1",
+    "aid.js": "^0.1.61",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint-loader": "^1.9.0",
+    "extend": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "jquery": "^3.2.1",
+    "rxjs": "^5.5.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.2",
+    "webpack-hot-middleware": "^2.20.0",
+    "webpack-stream": "^4.0.0"
+  }
+}
