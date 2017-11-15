@@ -1,9 +1,9 @@
 import $ from 'jquery';
+// import {Subject} from 'rxjs';
 
 $(document).ready(init);
 
 function init() {
   console.log('$ :', $);
-
-  console.log('oh no');
+  // console.log('Subject :', Subject);
 }

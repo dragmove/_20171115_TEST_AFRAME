@@ -43,21 +43,25 @@ function createConfig(isDebug) {
 
   } else {
     // development
-    entry.unshift('webpack/hot/dev-server');
+    entry.unshift('webpack-dev-server/client?http://localhost:9000', 'webpack/hot/dev-server');
 
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      mangle: false,
-      output: {
-        beautify: true,
-        comments: true,
-      },
-      compress: {
-        unused: false,
-        drop_console: false,
-        warnings: true
-      }
-    }), new webpack.HotModuleReplacementPlugin());
+    plugins.push(
+      new webpack.HotModuleReplacementPlugin(),
+
+      new webpack.optimize.UglifyJsPlugin({
+        sourceMap: false,
+        mangle: false,
+        output: {
+          beautify: true,
+          comments: true,
+        },
+        compress: {
+          unused: false,
+          drop_console: false,
+          warnings: true
+        }
+      })
+    );
   }
 
 
@@ -91,8 +95,8 @@ function createConfig(isDebug) {
           loader: 'babel-loader',
           options: {
             presets: [
-              ["env", {
-                "modules": false
+              ['env', {
+                'modules': false
               }]
             ]
           }

@@ -25,16 +25,23 @@ const config = require('./webpack.config.js'),
   devConfig = config(true),
   prodConfig = config(false),
 
-  devClientBuild = webpack(devConfig),
-  prodClientBuild = webpack(prodConfig);
+  devWebpack = webpack(devConfig),
+  prodWebpack = webpack(prodConfig);
 
 gulp.task('webpack-dev-server:dev', function () {
-  const server = new WebpackDevServer(devClientBuild, devConfig.devServer);
+  const server = new WebpackDevServer(devWebpack, devConfig.devServer);
 
   server.listen(devConfig.devServer.port, 'localhost', function (err) {
     if (err) console.error('[webpack-dev-server failed to start :', err);
   });
 });
+
+gulp.task('prod', function() {
+  prodWebpack.run((error, stats) => {
+    if(error) throw new Error(error);
+  });
+});
+
 
 /*
 function buildMinJS(name, options) {
