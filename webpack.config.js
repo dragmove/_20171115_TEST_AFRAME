@@ -6,12 +6,13 @@ const truthy = aid.truthy,
   falsy = aid.falsy;
 
 const dir = path.resolve('./'),
-  vendorModules = ['aframe', 'rxjs'];
+  vendorModules = ['jquery', 'aframe', 'rxjs'],
+  port = 9000;
 
 function createConfig(isDebug) {
   const devTool = truthy(isDebug) ? 'eval-source-map' : 'source-map';
 
-  var plugins = [
+  let plugins = [
     new webpack.BannerPlugin({
       banner: '',
       raw: true
@@ -43,7 +44,7 @@ function createConfig(isDebug) {
 
   } else {
     // development
-    entry.unshift('webpack-dev-server/client?http://localhost:9000', 'webpack/hot/dev-server');
+    entry.unshift(`webpack-dev-server/client?http://localhost:${port}`, 'webpack/hot/dev-server');
 
     plugins.push(
       new webpack.HotModuleReplacementPlugin(),
@@ -76,16 +77,8 @@ function createConfig(isDebug) {
     output: {
       filename: '[name].js',
       path: path.resolve(dir, 'app/build')
-      // publicPath: '/build/' // TODO - what ?
+      // publicPath: '/build/' // https://medium.com/@rajaraodv/webpack-the-confusing-parts-58712f8fcad9
     },
-
-    /*
-     resolve: {
-     alias: {
-     shared: path.join(dir, 'src', 'shared')
-     }
-     },
-     */
 
     module: {
       rules: [
@@ -119,9 +112,9 @@ function createConfig(isDebug) {
       contentBase: './app',
       noInfo: true, //  --no-info option
       // host: '',
-      port: 9000,
-      hot: true,
-      inline: true
+      port: port,
+      hot: true, // hot module reloading
+      inline: true // live reloading
     }
   };
 }
