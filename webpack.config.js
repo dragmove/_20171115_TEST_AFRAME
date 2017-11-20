@@ -6,7 +6,7 @@ const truthy = aid.truthy,
   falsy = aid.falsy;
 
 const dir = path.resolve('./'),
-  vendorModules = ['jquery', 'aframe', 'rxjs'],
+  vendorModules = ['jquery', 'aid.js', 'aframe', 'rxjs'],
   port = 9000;
 
 function createConfig(isDebug) {
@@ -47,8 +47,9 @@ function createConfig(isDebug) {
     entry.unshift(`webpack-dev-server/client?http://localhost:${port}`, 'webpack/hot/dev-server');
 
     plugins.push(
-      new webpack.HotModuleReplacementPlugin(),
+      new webpack.HotModuleReplacementPlugin()
 
+      /*
       new webpack.optimize.UglifyJsPlugin({
         sourceMap: false,
         mangle: false,
@@ -62,9 +63,9 @@ function createConfig(isDebug) {
           warnings: true
         }
       })
+      */
     );
   }
-
 
   return {
     context: dir,

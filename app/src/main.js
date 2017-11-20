@@ -1,6 +1,7 @@
-function init() {
-  console.log('$ :', $);
-  // console.log('Subject :', Subject);
-}
+import $ from 'jquery';
 
-init();
+$(document).ready(init);
+
+function init() {
+
+}
