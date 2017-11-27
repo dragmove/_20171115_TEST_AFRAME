@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import chalk from 'chalk';
 import express from 'express';
 import http from 'http';
+import socketIo from 'socket.io';
 
 const isDevelopment = (process.env.NODE_ENV !== 'production');
 
@@ -11,6 +12,7 @@ const isDevelopment = (process.env.NODE_ENV !== 'production');
  */
 const app = express();
 const server = new http.Server(app);
+const io = socketIo(server);
 
 /*
  * client webpack
@@ -55,6 +57,27 @@ app.get('/', function (req, res) {
 
   res.render('index', {
     useExternalStyles
+  });
+});
+
+/*
+ * socket
+ */
+io.on('connection', (socket) => {
+  console.log('got user connection');
+
+  // send msg to everyone except for a certain socket
+  // socket.broadcast.emit('hi');
+
+  socket.on('disconnect', function() {
+    console.log('user disconnected');
+  });
+
+  socket.on('chat:message', function(msg) {
+    console.log('from client emit chat:message :', msg);
+
+    // send msg to everyone, include sender
+    io.emit('chat:message', msg);
   });
 });
 

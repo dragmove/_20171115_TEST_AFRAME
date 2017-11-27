@@ -1,6 +1,16 @@
-import $ from 'jquery';
+import io from 'socket.io-client';
+// import $ from 'jquery';
 // import aframe from 'aframe';
 
-const $html = $('html');
+const socket = io({authoConnect: false});
+socket.connect();
 
-console.log('$html :', $html);
+init();
+
+function init() {
+  socket.emit('chat:message', `oh ${Math.random()}`);
+
+  socket.on('chat:message', (msg) => {
+    console.log('from server emit chat:message :', msg);
+  });
+}
