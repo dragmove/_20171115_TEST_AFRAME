@@ -13,4 +13,8 @@ function init() {
   socket.on('chat:message', (msg) => {
     console.log('from server emit chat:message :', msg);
   });
+
+  socket.on('disconnected', () => {
+    console.log('disconnect client');
+  });
 }

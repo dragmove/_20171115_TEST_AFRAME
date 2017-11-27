@@ -2,7 +2,7 @@ const path = require('path'),
   webpack = require('webpack'),
   dirname = path.resolve('./');
 
-const vendorModules = ['jquery', 'aframe'];
+const vendorModules = ['jquery', 'aframe', 'rxjs'];
 
 function createConfig(isDebug) {
   const devTool = (isDebug) ? 'eval-source-map' : 'source-map';
