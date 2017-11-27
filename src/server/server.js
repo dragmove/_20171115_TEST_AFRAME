@@ -65,7 +65,7 @@ const port = process.env.port || 3000;
 
 function startServer() {
   server.listen(port, () => {
-    console.log('oh yes baby');
+    console.log(`Started http server on ${port}`);
   });
 }
 

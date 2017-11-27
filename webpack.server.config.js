@@ -16,11 +16,12 @@ function ignoreNodeModules(context, request, callback) {
 function createConfig(isDebug) {
   const devTool = aid.truthy(isDebug) ? 'eval-source-map' : 'source-map';
 
-  // https://webpack.js.org/configuration/externals/
+
   let externals = [
       ignoreNodeModules
 
       /*
+       // https://webpack.js.org/configuration/externals/
        function (context, request, callback) {
        if (/^(jquery|\$)$/.test(request)) {
        return callback(null, 'commonjs ' + request);
