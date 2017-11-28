@@ -1,3 +1,5 @@
+import './styles/application.scss';
+
 // import io from 'socket.io-client';
 // import $ from 'jquery';
 // import aframe from 'aframe';
