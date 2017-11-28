@@ -5,6 +5,10 @@ import express from 'express';
 import http from 'http';
 import socketIo from 'socket.io';
 
+import {ObservableSocket} from 'shared/observable-socket';
+
+import {UsersModule} from './modules/users';
+
 const isDevelopment = (process.env.NODE_ENV !== 'production');
 
 /*
@@ -53,27 +57,34 @@ app.use(express.static('public'));
 const useExternalStyles = !isDevelopment;
 
 app.get('/', function (req, res) {
-  // res.send('<h1>oh yes</h1>');
-
   res.render('index', {
     useExternalStyles
   });
 });
 
 /*
+ * modules
+ */
+const users = new UsersModule(io);
+
+const modules = [users];
+
+/*
  * socket
  */
 io.on('connection', (socket) => {
-  console.log('got user connection');
+  console.log(`Got connection from ${socket.request.connection.remoteAddress}`);
 
+  // control event 'connect, disconnect, reconnecting, reconnect_failed'
+  const client = new ObservableSocket(socket);
+
+  for(let module of modules) {
+    module.registerClient(client);
+  }
+
+  /*
   // send msg to everyone except for a certain socket
   // socket.broadcast.emit('hi');
-
-  socket.on('disconnect', function() {
-    console.log('user disconnected');
-
-    io.emit('disconnected');
-  });
 
   socket.on('chat:message', function(msg) {
     console.log('from client emit chat:message :', msg);
@@ -81,6 +92,13 @@ io.on('connection', (socket) => {
     // send msg to everyone, include sender
     io.emit('chat:message', msg);
   });
+
+   socket.on('disconnect', function() {
+   console.log('user disconnected');
+
+   io.emit('disconnected');
+   });
+  */
 });
 
 /*

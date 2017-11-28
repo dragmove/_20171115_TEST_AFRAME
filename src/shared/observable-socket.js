@@ -1,8 +1,14 @@
+/*eslint no-unused-vars: "off"*/
+
 import {Observable} from 'rxjs';
+import aid from 'aid.js';
+
+const not = aid.not,
+  isDefined = aid.isDefined;
 
 export class ObservableSocket {
   constructor(socket) {
-    this._socket = socket;
+    this._socket = socket; // this is io in server side
 
     this._state = {
       // isConnected: true/false
@@ -35,7 +41,7 @@ export class ObservableSocket {
         return {
           isConnected: false,
           isReconnecting: false
-        }
+        };
       }))
       .publishReplay(1)
       .refCount();
@@ -61,5 +67,62 @@ export class ObservableSocket {
 
   emit(event, arg) {
     this._socket.emit(event, arg);
+  }
+
+  // on (server side)
+  onAction(action, callback) {
+    this._socket.on(action, (arg, requestId) => {
+      console.log('onAction action, arg, requestId :', action, arg, requestId);
+
+      try {
+        const value = callback(arg);
+        console.log('onAction value :', value);
+
+        if (!value) {
+          console.log('onAction !value');
+
+          this._socket.emit(action, null, requestId);
+
+          return;
+        }
+
+        if (typeof(value.subscribe) !== 'function') {
+          console.log('onAction value.subscribe is not function');
+
+          this._socket.emit(action, value, requestId);
+
+          return;
+        }
+
+        let hasValue = false;
+
+        value.subscribe({
+          next: (item) => {
+            // TODO
+          },
+
+          error: (error) => {
+            // TODO
+          },
+
+          complete: () => {
+            console.log('complete from');
+          }
+        });
+
+      } catch (error) {
+        if (not(isDefined)(requestId)) {
+          this._emitError(action, requestId, error);
+        }
+
+        console.error(error.stack || error);
+      }
+    });
+  }
+
+  _emitError(action, requestId, error) {
+    console.log('_emitError action, requestId, error :', action, requestId, error);
+
+
   }
 }

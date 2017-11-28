@@ -1,20 +1,27 @@
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 // import $ from 'jquery';
 // import aframe from 'aframe';
 
-const socket = io({authoConnect: false});
-socket.connect();
+// const socket = io({authoConnect: false});
 
-init();
+import * as services from './services'; // has socket, server, usersStore
 
-function init() {
-  socket.emit('chat:message', `oh ${Math.random()}`);
+require('./components/users/users');
 
-  socket.on('chat:message', (msg) => {
-    console.log('from server emit chat:message :', msg);
-  });
+services.socket.connect();
 
-  socket.on('disconnected', () => {
-    console.log('disconnect client');
-  });
-}
+/*
+ init();
+
+ function init() {
+ socket.emit('chat:message', `oh ${Math.random()}`);
+
+ socket.on('chat:message', (msg) => {
+ console.log('from server emit chat:message :', msg);
+ });
+
+ socket.on('disconnected', () => {
+ console.log('disconnect client');
+ });
+ }
+ */
