@@ -8,7 +8,8 @@ const not = aid.not,
 
 export class ObservableSocket {
   constructor(socket) {
-    this._socket = socket; // this is io in server side
+    // use client side, server side
+    this._socket = socket;
 
     this._state = {
       // isConnected: true/false
@@ -79,7 +80,7 @@ export class ObservableSocket {
         console.log('onAction value :', value);
 
         if (!value) {
-          console.log('onAction !value');
+          console.log('onAction !value. emit action to client side.');
 
           this._socket.emit(action, null, requestId);
 
@@ -87,7 +88,7 @@ export class ObservableSocket {
         }
 
         if (typeof(value.subscribe) !== 'function') {
-          console.log('onAction value.subscribe is not function');
+          console.log('onAction value.subscribe is not function. emit action to client side.');
 
           this._socket.emit(action, value, requestId);
 

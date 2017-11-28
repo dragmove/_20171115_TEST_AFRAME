@@ -3,8 +3,8 @@ $fa-font-path: "~font-awesome/fonts";
 @import "./variables";
 
 ::-webkit-scrollbar {
-  height: 5px;
   width: 5px;
+  height: 5px;
   background: darken($background, 3%);
 }
 
@@ -20,15 +20,10 @@ $fa-font-path: "~font-awesome/fonts";
   }
 }
 
-div {
-  margin: 0;
-  padding: 0;
-}
-
 html, body {
-  height: 100%;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 body {
@@ -39,59 +34,49 @@ body {
 }
 
 .wrapper {
-  display: flex;
+  display: block;
   height: 100%;
 
-  .site-wrap {
+  .column-wrap {
     display: flex;
+    position: absolute;
     box-sizing: border-box;
+    top: 0;
+    right: 0;
+    width: 180px;
     height: 100%;
-    width: 400px;
     border-bottom: 5px solid $border-panel;
 
     > .column {
       display: flex;
-      flex-grow: 1;
-      flex-direction: row;
-
-      &.left {
-        > section {
-          //border-right: 2px solid $border-panel;
-        }
-      }
+      flex: 1;
+      flex-direction: column;
 
       &.right {
         > section {
           //border-left: 2px solid $border-panel;
         }
       }
-
-      /*
-      &.center {
-        flex-grow: 1;
-      }
-      */
     }
   }
 }
 
 .column > section {
-  background: $background-panel;
   flex-grow: 1;
+  background: $background-panel;
   overflow: hidden;
 
   > h1 {
-    background: $border-panel;
-    border-bottom: 2px solid darken($background, 5%);
+    display: flex;
+    flex-shrink: 0;
     padding: 5px;
     margin: 0;
+    border-bottom: 1px solid darken($background, 5%);
+    background: $border-panel;
     font-weight: normal;
     color: lighten($color, 10%);
     font-size: 9pt;
     text-transform: lowercase;
-    flex-shrink: 0;
-
-    display: flex;
 
     .info {
       margin-left: auto;

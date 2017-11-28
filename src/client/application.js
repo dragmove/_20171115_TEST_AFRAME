@@ -1,5 +1,7 @@
 import './styles/application.scss';
 
+import 'shared/operators';
+
 // import io from 'socket.io-client';
 // import $ from 'jquery';
 // import aframe from 'aframe';
@@ -11,6 +13,13 @@ import * as services from './services'; // has socket, server, usersStore
 require('./components/users/users');
 
 services.socket.connect();
+
+/*
+ * test
+ */
+services.usersStore.state$.subscribe(state => {
+  console.log('state :', state);
+});
 
 /*
  init();

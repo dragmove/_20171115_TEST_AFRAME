@@ -27,6 +27,10 @@ export class UsersStore {
     // bootstrap
     this._server.on('connect', () => {
 
+      // emit action to server side.
+      this._server.emit('users:list');
+
+      // TODO
     });
   }
 }
