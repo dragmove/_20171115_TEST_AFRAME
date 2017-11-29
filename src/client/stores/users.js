@@ -1,11 +1,21 @@
 import {Observable} from 'rxjs';
 import _ from 'lodash';
+import aid from 'aid.js';
+
+const isDefined = aid.isDefined,
+  truthy = aid.truthy,
+  falsy = aid.falsy;
 
 export class UsersStore {
+  get isLoggedIn() {
+    return isDefined(this._currentUser) && truthy(this._currentUser.isLoggedIn);
+  }
+
   constructor(server) {
     // server is instance created from new ObservableSocket(socket)
 
     this._server = server;
+    this._currentUser = null;
 
     const defaultStore = {users: []};
 
@@ -24,14 +34,51 @@ export class UsersStore {
 
     this.state$.connect();
 
+    // Auth
+    this.currentUser$ = Observable.merge(
+      this._server.on$('auth:login'),
+      this._server.on$('auth:logout').mapTo({}))
+      .startWith({})
+      .publishReplay(1)
+      .refCount();
+
+    this.currentUser$.subscribe((user) => {
+      this._currentUser = user;
+    });
+
     // bootstrap
     this._server.on('connect', () => {
 
       // emit action to server side.
       this._server.emit('users:list');
 
-      // TODO
+      if(falsy(this.isLoggedIn)) {
+        console.log('current user is not logged in.');
+
+        return;
+      }
+
+      // get ReplaySubject
+      this.login$(this._currentUser.name).subscribe(
+        (user) => {
+          console.log(`Logged in again as ${user.name}`);
+        },
+
+        (error) => {
+          window.alert(`Could not log back in ${error.message || 'unknown error'}`);
+        }
+      );
     });
+  }
+
+  login$(name) {
+    // TODO
+
+    return this._server.emitAction$('auth:login', {name});
+  }
+
+  logout$(name) {
+    return this._server.emitAction$('auth:logout');
   }
 }
 

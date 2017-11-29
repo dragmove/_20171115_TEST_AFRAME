@@ -21,3 +21,13 @@ after run 'webpack-dev-server' task, access http://localhost:9000/
 
 ## License
 [MIT license](http://danro.mit-license.org/).
+
+
+## Process
+connect socket in client-side
+
+emit('users:list'); from client-side to server-side
+
+server-side get 'users:list' event => emit('users:list', this._userList, undefined) to client-side
+
+client-side get 'users:list' event => make state$ from 'users:list, users:added, users:removed' merged Observable. => display data from state$

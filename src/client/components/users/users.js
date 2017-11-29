@@ -88,6 +88,8 @@ class UsersComponent extends ElementComponent {
     // get users from usersStore state$
     this._usersStore.state$
       .map((action) => {
+        console.log('usersComponent action from _usersStore.state$ :', action);
+
         return action.state.users;
       })
       .compSubscribe(this, (users) => {
@@ -103,8 +105,6 @@ class UsersComponent extends ElementComponent {
 
           this.$element.append($userElement);
         }
-
-
       });
   }
 }

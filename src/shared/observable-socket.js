@@ -1,10 +1,11 @@
 /*eslint no-unused-vars: "off"*/
 
-import {Observable} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 import aid from 'aid.js';
 
 const not = aid.not,
-  isDefined = aid.isDefined;
+  isDefined = aid.isDefined,
+  isFunction = aid.isFunction;
 
 export class ObservableSocket {
   constructor(socket) {
@@ -16,6 +17,10 @@ export class ObservableSocket {
       // isReconnecting: true/false
       // attempt: Number
     };
+
+    this._actionCallbacks = {};
+    this._requests = {};
+    this._nextRequestId = 0;
 
     this.status$ = Observable.merge(
       this.on$('connect').map(() => {
@@ -79,7 +84,7 @@ export class ObservableSocket {
         const value = callback(arg);
         console.log('onAction value :', value);
 
-        if (!value) {
+        if (not(isDefined)(value)) {
           console.log('onAction !value. emit action to client side.');
 
           this._socket.emit(action, null, requestId);
@@ -87,7 +92,7 @@ export class ObservableSocket {
           return;
         }
 
-        if (typeof(value.subscribe) !== 'function') {
+        if (not(isFunction)(value.subscribe)) {
           console.log('onAction value.subscribe is not function. emit action to client side.');
 
           this._socket.emit(action, value, requestId);
@@ -100,14 +105,17 @@ export class ObservableSocket {
         value.subscribe({
           next: (item) => {
             // TODO
+            console.log('next item :', item);
           },
 
           error: (error) => {
             // TODO
+            console.error('error item :', error.stack || error);
           },
 
           complete: () => {
-            console.log('complete from');
+            console.log('complete');
+            // TODO
           }
         });
 
@@ -124,6 +132,60 @@ export class ObservableSocket {
   _emitError(action, requestId, error) {
     console.log('_emitError action, requestId, error :', action, requestId, error);
 
+  }
 
+  // call from client side.
+  emitAction$(action, arg) {
+    console.log('emitAction$(action, arg) :', action, arg);
+
+    const id = this._nextRequestId++;
+
+    this._registerCallbacks(action);
+
+    const subject = this._requests[id] = new ReplaySubject(1);
+
+    this._socket.emit(action, arg, id);
+
+    return subject;
+  }
+
+  _registerCallbacks(action) {
+    if(this._actionCallbacks.hasOwnProperty(action)) return;
+
+    this._socket.on(action, (arg, id) => {
+      console.log('_registerCallbacks action, arg, id :', action, arg, id);
+
+      const request = this._popRequest(id);
+      if(not(isDefined)(request)) return;
+
+      console.log('request :', request);
+
+      request.next(arg);
+      request.complete();
+    });
+
+    this._socket.on(`${action}:fail`, (arg, id) => {
+      console.log('_registerCallbacks action:fail, arg, id :', `${action}:fail`, arg, id);
+
+      const request = this._popRequest(id);
+      if(not(isDefined)(request)) return;
+
+      request.error(arg);
+    });
+
+    this._actionCallbacks[action] = true;
+  }
+
+  _popRequest(id) {
+    if (not(this._requests.hasOwnProperty)(id)) {
+      console.error(`Event with id ${id} was returned twice, or the server did not send back an id`);
+      return;
+    }
+
+    const request = this._requests[id];
+
+    delete this._requests[id];
+
+    return request;
   }
 }
