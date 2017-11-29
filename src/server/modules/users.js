@@ -1,4 +1,13 @@
+/*eslint quotes: ["error", "single", { "allowTemplateLiterals": true }]*/
+
+import {Observable} from 'rxjs';
+import aid from 'aid.js';
+
+import {fail} from 'shared/observable-socket';
+
 import {ModuleBase} from './ModuleBase';
+
+const truthy = aid.truthy;
 
 const AuthContext = Symbol('AuthContext');
 
@@ -27,6 +36,11 @@ export class UsersModule extends ModuleBase {
       return this._userList;
     });
 
+    client.onAction('auth:login', ({name}) => {
+      //
+      return this.loginClient$(client, name);
+    });
+
     /*
     client.onAction('auth:login', ({name}) => {
       return this.loginClient$(client, name);
@@ -42,12 +56,41 @@ export class UsersModule extends ModuleBase {
     });
   }
 
+  loginClient$(client, username) {
+    username = username.trim();
+
+    // TODO: validate
+
+    if(this._users.hasOwnProperty(username)) {
+      return fail(`Username ${username} is already taken.`);
+    }
+
+    const auth = client[AuthContext] || (client[AuthContext] = {isLoggedIn: false});
+    console.log('auth :', auth);
+
+    if(truthy(auth.isLoggedIn)) {
+      return fail(`You are already logged in.`);
+    }
+
+    auth.name = username;
+    auth.color = ''; //TODO
+    auth.isLoggedIn = true;
+
+    this._userList.push(auth);
+
+    this._users[username] = client;
+
+    this._io.emit('users:added', auth);
+
+    return Observable.of(auth);
+  }
+
   logoutClient(client) {
     // TODO
   }
 
   getUserForClient(client) {
-
+    // TODO
   }
 }
 

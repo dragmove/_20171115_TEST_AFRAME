@@ -43,6 +43,8 @@ export class UsersStore {
       .refCount();
 
     this.currentUser$.subscribe((user) => {
+      console.log('currentUser$.subscribe user :', user);
+
       this._currentUser = user;
     });
 
@@ -72,7 +74,7 @@ export class UsersStore {
   }
 
   login$(name) {
-    // TODO
+    // TODO: validate
 
     return this._server.emitAction$('auth:login', {name});
   }

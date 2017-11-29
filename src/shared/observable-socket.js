@@ -7,6 +7,10 @@ const not = aid.not,
   isDefined = aid.isDefined,
   isFunction = aid.isFunction;
 
+export function fail(message) {
+  return Observable.throw({clientMessage: message});
+}
+
 export class ObservableSocket {
   constructor(socket) {
     // use client side, server side
@@ -150,13 +154,13 @@ export class ObservableSocket {
   }
 
   _registerCallbacks(action) {
-    if(this._actionCallbacks.hasOwnProperty(action)) return;
+    if (this._actionCallbacks.hasOwnProperty(action)) return;
 
     this._socket.on(action, (arg, id) => {
       console.log('_registerCallbacks action, arg, id :', action, arg, id);
 
       const request = this._popRequest(id);
-      if(not(isDefined)(request)) return;
+      if (not(isDefined)(request)) return;
 
       console.log('request :', request);
 
@@ -168,7 +172,7 @@ export class ObservableSocket {
       console.log('_registerCallbacks action:fail, arg, id :', `${action}:fail`, arg, id);
 
       const request = this._popRequest(id);
-      if(not(isDefined)(request)) return;
+      if (not(isDefined)(request)) return;
 
       request.error(arg);
     });

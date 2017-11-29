@@ -5,7 +5,7 @@ import aid from 'aid.js';
 import {Observable} from 'rxjs';
 import {usersStore} from '../../services';
 
-Observable.prototype.compSubscribe = function(component,...args) {
+Observable.prototype.compSubscribe = function (component, ...args) {
   // let subscription = this.subscribe(...args);
 
   let subscription = this.safeSubscribe(...args);
@@ -99,7 +99,7 @@ class UsersComponent extends ElementComponent {
 
         this.$element.empty();
 
-        for(let user of users) {
+        for (let user of users) {
           const $name = $(`<span class="name" />`).text(user.name).css('color', user.color);
           const $userElement = $(`<li />`).append($name);
 

@@ -28,6 +28,13 @@ connect socket in client-side
 
 emit('users:list'); from client-side to server-side
 
-server-side get 'users:list' event => emit('users:list', this._userList, undefined) to client-side
+server-side get 'users:list' event
+=> emit('users:list', this._userList, undefined) to client-side
 
-client-side get 'users:list' event => make state$ from 'users:list, users:added, users:removed' merged Observable. => display data from state$
+client-side get 'users:list' event
+=> subscribe state$ Observable which merge 'users:list, users:added, users:removed' event
+=> display data from state$
+
+.
+
+emit('auth:login', {name})
