@@ -11,6 +11,7 @@ import 'shared/operators';
 import * as services from './services'; // has socket, server, usersStore
 
 require('./components/users/users');
+require('./components/chat/chat');
 
 services.socket.connect();
 

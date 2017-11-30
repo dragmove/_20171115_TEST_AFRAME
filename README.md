@@ -37,4 +37,41 @@ client-side get 'users:list' event
 
 .
 
-emit('auth:login', {name})
++ usersStore
+this._server.emitAction$('auth:login', {name}) in client-side
+=> emit('auth:login', {name}). return ReplaySubject
+
+server-side modules/usersModule get 'auth:login' event
+=> this.loginClient$(client, name).  
+    this._userList.push(auth);
+    this._users[username] = client;
+    
+    this._io.emit('users:added', auth);
+    return Observable.of(auth);
+
+client-side get 'users:added' event
+=> subscribe state$ Observable which merge 'users:list, users:added, users:removed' event
+=> display data from state$
+
+.
+
++ chatStore
+this._server.emit('chat:list'); in client-side
+
+.
+
++ chat form
+Observable.fromEvent(this._$input, 'keydown')
+=> this._sendMessage$(value) or this._login$(value)
+
+    - _login$(value)
+        this._usersStore.login$(username); 
+        => this._server.emitAction$('auth:login', {name});
+    
+    - _sendMessage$(value)
+
+
+
+
+
+

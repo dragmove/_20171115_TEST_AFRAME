@@ -11,13 +11,15 @@ export class UsersStore {
     return isDefined(this._currentUser) && truthy(this._currentUser.isLoggedIn);
   }
 
-  constructor(server) {
+  constructor(server$) {
     // server is instance created from new ObservableSocket(socket)
 
-    this._server = server;
+    this._server = server$;
     this._currentUser = null;
 
-    const defaultStore = {users: []};
+    const defaultStore = {
+      users: []
+    };
 
     const events$ = Observable.merge(
       this._server.on$('users:list').map(opList),
@@ -27,6 +29,9 @@ export class UsersStore {
 
     this.state$ = events$
       .scan(function (last, op) {
+        console.log('last :', last);
+        console.log('op(last) :', op(last));
+
         return op(last);
 
       }, {state: defaultStore})
@@ -86,23 +91,34 @@ export class UsersStore {
 
 function opList(users) {
   return (state) => {
+    console.log('opList state :', state);
+
     state.users = users;
     state.users.sort((l, r) => l.name.localeCompare(r.name));
 
     return {
       type: 'list',
-      state: state
+      state: state // {state: {users: []}}
     };
   };
 }
 
 function opAdd(user) {
   return (state) => {
+    console.log('opAdd user, state :', user, state);
+
     let insertIndex = _.findIndex(state.users, (u) => {
       return u.name.localeCompare(user.name) > 0;
     });
 
-    if (insertIndex < 0) insertIndex = state.users.length;
+    console.log('insertIndex :', insertIndex);
+
+    if (insertIndex < 0) {
+      console.log('state :', state);
+      console.log('state.users :', state.users);
+
+      insertIndex = state.users.length;
+    }
 
     state.users.splice(insertIndex, 0, user);
 
@@ -116,6 +132,8 @@ function opAdd(user) {
 
 function opRemove(user) {
   return (state) => {
+    console.log('opRemove state :', state);
+
     const index = _.findIndex(state.users, {name: user.name});
 
     if (index >= 0) state.users.splice(index, 1);
