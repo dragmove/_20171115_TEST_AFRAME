@@ -17,9 +17,7 @@ export class UsersStore {
     this._server = server$;
     this._currentUser = null;
 
-    const defaultStore = {
-      users: []
-    };
+    const defaultStore = { users: [] };
 
     const events$ = Observable.merge(
       this._server.on$('users:list').map(opList),
@@ -29,10 +27,7 @@ export class UsersStore {
 
     this.state$ = events$
       .scan(function (last, op) {
-        console.log('last :', last);
-        console.log('op(last) :', op(last));
-
-        return op(last);
+        return op(last.state);
 
       }, {state: defaultStore})
       .publishReplay(1);
@@ -105,18 +100,13 @@ function opList(users) {
 
 function opAdd(user) {
   return (state) => {
-    console.log('opAdd user, state :', user, state);
+    console.log('opList state :', state);
 
     let insertIndex = _.findIndex(state.users, (u) => {
       return u.name.localeCompare(user.name) > 0;
     });
 
-    console.log('insertIndex :', insertIndex);
-
     if (insertIndex < 0) {
-      console.log('state :', state);
-      console.log('state.users :', state.users);
-
       insertIndex = state.users.length;
     }
 

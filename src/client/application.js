@@ -18,9 +18,11 @@ services.socket.connect();
 /*
  * test
  */
+/*
 services.usersStore.state$.subscribe(state => {
   console.log('state :', state);
 });
+*/
 
 /*
  init();

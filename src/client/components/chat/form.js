@@ -3,8 +3,7 @@ import {Observable} from 'rxjs';
 import aid from 'aid.js';
 import {ElementComponent} from '../Component';
 
-const isDefined = aid.isDefined,
-  truthy = aid.truthy;
+const truthy = aid.truthy;
 
 export class ChatFormComponent extends ElementComponent {
   constructor(usersStore, chatStore) {
@@ -53,7 +52,7 @@ export class ChatFormComponent extends ElementComponent {
       .compSubscribe(this, response => {
         console.log('ChatFormComponent _$input response :', response);
 
-        if (isDefined(response) && isDefined(response.error)) {
+        if (response && response.error) {
           this._$error.show().text(response.error.message);
 
         } else {

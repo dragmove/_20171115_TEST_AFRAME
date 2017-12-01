@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import aid from 'aid.js';
 import {ElementComponent} from '../Component';
 import {usersStore} from '../../services';
 
@@ -56,9 +55,6 @@ try {
 } finally {
   if (module.hot) {
     module.hot.accept();
-
-    module.hot.dispose(() => {
-      if (aid.isDefined(component)) component.detach();
-    });
+    module.hot.dispose(() => component && component.detach());
   }
 }

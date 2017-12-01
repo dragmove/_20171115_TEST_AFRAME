@@ -1,11 +1,8 @@
 import $ from 'jquery';
-import aid from 'aid.js';
 import {server, usersStore, chatStore} from '../../services';
 import {ComponentBase} from '../Component';
 import {ChatListComponent} from './list';
 import {ChatFormComponent} from './form';
-
-const isDefined = aid.isDefined;
 
 class ChatComponent extends ComponentBase {
   constructor(server, usersStore, chatStore) {
@@ -39,15 +36,12 @@ try {
 
 } catch (error) {
   console.error(error);
-
-  if (isDefined(component)) component.detach();
+  if (component) component.detach();
 
 } finally {
   if (module.hot) {
     module.hot.accept();
-    module.hot.dispose(() => {
-      if (isDefined(component)) component.detach();
-    });
+    module.hot.dispose(() => component && component.detach());
   }
 }
 

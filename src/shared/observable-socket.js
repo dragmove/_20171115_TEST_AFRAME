@@ -88,7 +88,7 @@ export class ObservableSocket {
         const value = callback(arg);
         console.log('onAction value :', value);
 
-        if (not(isDefined)(value)) {
+        if (!value) {
           console.log('onAction !value. emit action to client side.');
 
           this._socket.emit(action, null, requestId);
@@ -108,18 +108,31 @@ export class ObservableSocket {
 
         value.subscribe({
           next: (item) => {
-            // TODO
             console.log('next item :', item);
+
+            if(hasValue) {
+              throw new Error(`Action ${action} produced more than one value.`);
+            }
+
+            this._socket.emit(action, item, requestId);
+
+            hasValue = true;
           },
 
           error: (error) => {
-            // TODO
             console.error('error item :', error.stack || error);
+
+            this._emitError(action, requestId, error);
+
+            console.error(error.stack || error);
           },
 
           complete: () => {
             console.log('complete');
-            // TODO
+
+            if(!hasValue) {
+              this._socket.emit(action, null, requestId);
+            }
           }
         });
 
@@ -131,6 +144,17 @@ export class ObservableSocket {
         console.error(error.stack || error);
       }
     });
+  }
+
+  onActions(actions) {
+    for (let action in actions) {
+      if(!actions.hasOwnProperty(action)) {
+        console.log(`onActions: try repeat ${action}`);
+        continue;
+      }
+
+      this.onAction(action, actions[action]);
+    }
   }
 
   _emitError(action, requestId, error) {
@@ -160,7 +184,7 @@ export class ObservableSocket {
       console.log('_registerCallbacks action, arg, id :', action, arg, id);
 
       const request = this._popRequest(id);
-      if (not(isDefined)(request)) return;
+      if (!request) return;
 
       console.log('request :', request);
 
@@ -172,7 +196,7 @@ export class ObservableSocket {
       console.log('_registerCallbacks action:fail, arg, id :', `${action}:fail`, arg, id);
 
       const request = this._popRequest(id);
-      if (not(isDefined)(request)) return;
+      if (!request) return;
 
       request.error(arg);
     });
@@ -181,7 +205,7 @@ export class ObservableSocket {
   }
 
   _popRequest(id) {
-    if (not(this._requests.hasOwnProperty)(id)) {
+    if (!this._requests.hasOwnProperty(id)) {
       console.error(`Event with id ${id} was returned twice, or the server did not send back an id`);
       return;
     }

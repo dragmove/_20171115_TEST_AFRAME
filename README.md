@@ -67,6 +67,16 @@ Observable.fromEvent(this._$input, 'keydown')
     - _login$(value)
         this._usersStore.login$(username); 
         => this._server.emitAction$('auth:login', {name});
+
+        server-side get 'auth:login' event
+            const auth = client[AuthContext] || client[AuthContext] = {isLoggedIn: false}
+            this._userList.push(auth);
+            this._users[username] = client;
+
+            this._io.emit('users:added', auth);
+            => client-side get 'users:added' event.
+                subscribe state$ Observable which merge 'users:list, users:added, users:removed' event
+                display data from state$
     
     - _sendMessage$(value)
 
