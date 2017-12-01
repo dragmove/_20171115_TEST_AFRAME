@@ -19,10 +19,30 @@ class UsersComponent extends ElementComponent {
       .map((action) => {
         console.log('usersComponent action from _usersStore.state$ :', action);
 
-        return action.state.users;
+        return {
+          type: action.type,
+          users: action.state.users || [],
+          user: (action.user) ? action.user : null
+        };
       })
-      .compSubscribe(this, (users) => {
+      .compSubscribe(this, ({type, users, user}) => {
         // custom prototype method. hijacking for unsubscribe, when call component.detach() in hot module replacement
+
+        console.log('type, users, user :', type, users, user);
+
+        switch (type) {
+          case 'list' :
+            //
+            break;
+
+          case 'add' :
+            console.log(`${user.name} user is logged in. 'ㅅ')`);
+            break;
+
+          case 'remove' :
+            console.log(`${user.name} user is logged out. 'ㅅ')`);
+            break;
+        }
 
         $title.text(`${users.length} user${(users.length !== 1) ? 's' : ''}`);
 

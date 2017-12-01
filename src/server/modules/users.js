@@ -106,6 +106,8 @@ export class UsersModule extends ModuleBase {
     delete this._users[auth.name];
     delete client[AuthContext];
 
+    auth.isLoggedIn = false;
+
     console.log(`User ${auth.name} logged out`);
 
     this._io.emit('users:removed', auth);
