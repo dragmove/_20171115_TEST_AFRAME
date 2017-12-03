@@ -8,6 +8,7 @@ import socketIo from 'socket.io';
 import {ObservableSocket} from 'shared/observable-socket';
 
 import {UsersModule} from './modules/users';
+import {ChatModule} from './modules/chat';
 
 const isDevelopment = (process.env.NODE_ENV !== 'production');
 
@@ -66,8 +67,9 @@ app.get('/', function (req, res) {
  * modules
  */
 const users = new UsersModule(io);
+const chat = new ChatModule(io, users);
 
-const modules = [users];
+const modules = [users, chat];
 
 /*
  * socket
