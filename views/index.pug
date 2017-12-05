@@ -7,8 +7,15 @@ html
 
     body
         .wrapper
-            a-scene
-                a-box(position="0 0 -10" rotation="0 45 0" color="#4CC3D9")
+            a-scene(physics)
+                a-sky(color="#ECECEC")
+                a-plane(static-body position="0 0 -5" rotation="-90 0 0" width="4" height="4" color="#607D8B")
+                a-box(dynamic-body position="0 4 -5" rotation="0 45 0" width="0.5" height="0.5" depth="0.5" color="#E91E63")
+                a-box(dynamic-body position="0 7 -5.5" rotation="30 45 0" width="0.5" height="0.5" depth="0.5" color="#3F51B5")
+
+            //-
+                a-scene
+                    a-box(position="0 0 -10" rotation="0 45 0" color="#4CC3D9")
 
                 //-
                     a-sphere(position="0 1.25 -5" radius="1.25" color="#EF2D5E")

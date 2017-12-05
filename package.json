@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "aframe": "^0.7.1",
+    "aframe-physics-system": "^2.1.0",
     "aid.js": "^0.1.61",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
