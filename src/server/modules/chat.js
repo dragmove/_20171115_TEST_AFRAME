@@ -1,6 +1,9 @@
 import {ModuleBase} from './ModuleBase';
 import {fail} from 'shared/observable-socket';
 
+const MAX_HISTORY = 100;
+const BATCH_SIZE = 10;
+
 export class ChatModule extends ModuleBase {
   constructor(io, usersModule) {
     super();
@@ -12,7 +15,27 @@ export class ChatModule extends ModuleBase {
   }
 
   sendMessage(user, message, type) {
-    // TODO
+    message = message.trim();
+
+    // TODO: validate
+
+    const newMessage = {
+      user: {
+        name: user.name,
+        color: '' // user.color
+      },
+      message: message,
+      time: new Date().getTime(),
+      type: type
+    };
+
+    this._chatLog.push(newMessage);
+
+    if (this._chatLog.length >= MAX_HISTORY) {
+      this._chatLog.splice(0, BATCH_SIZE);
+    }
+
+    this._io.emit('chat:added', newMessage);
   }
 
   registerClient(client) {
@@ -22,8 +45,6 @@ export class ChatModule extends ModuleBase {
       },
 
       'chat:add': ({message, type}) => {
-        console.log('message, type :', message, type);
-
         type = (type || 'normal');
 
         const user = this._users.getUserForClient(client);

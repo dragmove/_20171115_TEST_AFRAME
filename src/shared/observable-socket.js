@@ -160,6 +160,7 @@ export class ObservableSocket {
   _emitError(action, requestId, error) {
     console.log('_emitError action, requestId, error :', action, requestId, error);
 
+    // TODO
   }
 
   // call from client side.
