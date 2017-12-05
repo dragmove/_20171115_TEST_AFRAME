@@ -48,6 +48,7 @@ export class ChatModule extends ModuleBase {
         type = (type || 'normal');
 
         const user = this._users.getUserForClient(client);
+
         if (!user) {
           return fail('You must be logged in');
         }

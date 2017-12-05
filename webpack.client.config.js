@@ -3,7 +3,7 @@ const path = require('path'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   dirname = path.resolve('./');
 
-const vendorModules = ['jquery', 'aframe', 'rxjs'];
+const vendorModules = ['jquery', 'aframe', 'aframe-physics-system', 'rxjs', 'lodash', 'randomcolor'];
 
 function createConfig(isDebug) {
   const devTool = (isDebug) ? 'eval-source-map' : 'source-map';

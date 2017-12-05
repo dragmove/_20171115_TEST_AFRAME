@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "aframe": "^0.7.1",
+    "aframe-physics-system": "^2.1.0",
     "aid.js": "^0.1.61",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
@@ -48,6 +49,7 @@
     "lodash": "^4.17.4",
     "node-sass": "^4.7.2",
     "pug": "^2.0.0-rc.4",
+    "randomcolor": "^0.5.3",
     "rimraf": "^2.6.2",
     "rxjs": "^5.5.2",
     "sass-loader": "^6.0.6",
